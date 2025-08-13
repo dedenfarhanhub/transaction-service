@@ -1,0 +1,129 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.example</groupId>
+  <artifactId>transaction-service</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <repositories>
+    <repository>
+      <id>central</id>
+      <url>https://repo.maven.apache.org/maven2</url>
+    </repository>
+    <repository>
+      <id>spring-milestones</id>
+      <url>https://repo.spring.io/milestone</url>
+    </repository>
+    <repository>
+      <id>spring-snapshots</id>
+      <url>https://repo.spring.io/snapshot</url>
+    </repository>
+  </repositories>
+
+  <properties>
+    <java.version>21</java.version>
+    <spring.boot.version>3.3.2</spring.boot.version>
+    <flyway.version>10.17.3</flyway.version>
+    <mysql.version>8.0.33</mysql.version>
+    <r2dbc.mysql.version>1.4.1</r2dbc.mysql.version>
+    <lombok.version>1.18.34</lombok.version>
+  </properties>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Spring Boot BOM -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring.boot.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <!-- MySQL driver & R2DBC -->
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>${mysql.version}</version>
+      </dependency>
+
+      <!-- Spring Data R2DBC Core -->
+      <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-r2dbc</artifactId>
+        <version>3.3.2</version>
+      </dependency>
+
+      <!-- R2DBC SPI -->
+      <dependency>
+        <groupId>io.r2dbc</groupId>
+        <artifactId>r2dbc-spi</artifactId>
+        <version>1.0.0.RELEASE</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.asyncer</groupId>
+        <artifactId>r2dbc-mysql</artifactId>
+        <version>1.4.1</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.projectlombok</groupId>
+        <artifactId>lombok</artifactId>
+        <version>${lombok.version}</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <!-- Project Reactor core (bisa dipakai di service-api) -->
+      <dependency>
+        <groupId>io.projectreactor</groupId>
+        <artifactId>reactor-core</artifactId>
+        <version>3.6.8</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <modules>
+    <module>migration</module>
+    <module>entity</module>
+    <module>dao</module>
+    <module>rest-web</module>
+    <module>rest-web-model</module>
+    <module>service-api</module>
+    <module>service-impl</module>
+  </modules>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <!-- Compiler -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-compiler-plugin</artifactId>
+          <version>3.11.0</version>
+          <configuration>
+            <source>${java.version}</source>
+            <target>${java.version}</target>
+          </configuration>
+        </plugin>
+
+        <!-- Spring Boot Plugin -->
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring.boot.version}</version>
+        </plugin>
+
+        <!-- Flyway Plugin -->
+        <plugin>
+          <groupId>org.flywaydb</groupId>
+          <artifactId>flyway-maven-plugin</artifactId>
+          <version>${flyway.version}</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+  </build>
+</project>
