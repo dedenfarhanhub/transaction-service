@@ -1,0 +1,50 @@
+services:
+  db:
+    image: mysql:8.1
+    container_name: mysql_transaction
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - "3313:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  migrate:
+    image: maven:3.9.11-eclipse-temurin-21
+    container_name: transaction-migrate
+    working_dir: /app
+    volumes:
+      - ./:/app
+    environment:
+      FLYWAY_URL: ${FLYWAY_URL}
+      FLYWAY_USER: ${FLYWAY_USER}
+      FLYWAY_PASSWORD: ${FLYWAY_PASSWORD}
+      DB_HOST: ${DB_HOST}
+    depends_on:
+      - db
+    command: ["mvn", "-f", "migration/pom.xml", "clean", "flyway:migrate",
+          "-Dflyway.locations=filesystem:/app/migration",
+          "-Dflyway.url=${FLYWAY_URL}",
+          "-Dflyway.user=${FLYWAY_USER}",
+          "-Dflyway.password=${FLYWAY_PASSWORD}"]
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: transaction-rest-web
+    depends_on:
+      - db
+    ports:
+      - "3000:3000"
+    environment:
+      SPRING_APPLICATION_NAME: ${SPRING_APPLICATION_NAME}
+      SPRING_R2DBC_URL: ${SPRING_R2DBC_URL}
+      SPRING_R2DBC_USERNAME: ${SPRING_R2DBC_USERNAME}
+      SPRING_R2DBC_PASSWORD: ${SPRING_R2DBC_PASSWORD}
+      DB_HOST: ${DB_HOST}
+
+volumes:
+  db_data:

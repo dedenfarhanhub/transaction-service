@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 
 @Repository
 public class TransactionRepositoryCustomImpl  implements TransactionRepositoryCustom {
+
     private final DatabaseClient client;
 
     public TransactionRepositoryCustomImpl(DatabaseClient client) {
@@ -26,13 +27,12 @@ public class TransactionRepositoryCustomImpl  implements TransactionRepositoryCu
                    p.name AS p_name,
                    t.amount AS t_amount,
                    t.customer_name AS t_customer,
-                   s.id AS s_id,
+                   t.status_id AS s_id,
                    t.transaction_date AS t_date,
                    t.create_by AS t_by,
                    t.create_on AS t_on
             FROM transaction t
             JOIN product p ON t.product_id = p.id
-            JOIN status s ON t.status_id = s.id
             ORDER BY t.id
         """;
 

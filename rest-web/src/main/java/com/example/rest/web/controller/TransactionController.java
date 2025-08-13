@@ -4,12 +4,15 @@ import com.example.rest.web.model.dto.StatusDto;
 import com.example.rest.web.model.dto.TransactionResponseDto;
 import com.example.rest.web.model.response.TransactionListResponse;
 import com.example.service.api.TransactionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
 
 import java.util.List;
 
+@Tag(name = "Transaction Controller", description = "API for transactions")
 @RestController
 public class TransactionController {
     private final TransactionService transactionService;
@@ -18,6 +21,7 @@ public class TransactionController {
         this.transactionService = transactionService;
     }
 
+    @Operation(summary = "List of transaction")
     @GetMapping("/transactions")
     public Mono<TransactionListResponse> getTransactions() {
 

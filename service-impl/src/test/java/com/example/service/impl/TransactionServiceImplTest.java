@@ -25,7 +25,6 @@ class TransactionServiceImplTest {
 
     @Test
     void testGetAllTransactions() {
-        // Mock data
         TransactionDetailDto dto1 = new TransactionDetailDto(
                 1L, 101L, "Product A", new BigDecimal("100.00"),
                 "Customer A", 0, LocalDateTime.now(), "Admin", LocalDateTime.now()
@@ -38,7 +37,6 @@ class TransactionServiceImplTest {
 
         when(repositoryMock.findAllTransactionDetails()).thenReturn(Flux.just(dto1, dto2));
 
-        // Test service
         StepVerifier.create(service.getAllTransactions())
                 .expectNext(dto1)
                 .expectNext(dto2)
